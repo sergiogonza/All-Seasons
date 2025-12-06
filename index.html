@@ -1,402 +1,606 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Seasons | Grass & Snow Services</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All Seasons — Grass Maintenance & Snow Removal</title>
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
-    /* -----------------------------------------------
-       RESET
-    ----------------------------------------------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+    :root{
+      --green-700: #1f7a3a;
+      --accent: #257596;
+      --muted: #6b7280;
     }
 
-    body {
-      background: #f2f2f2;
-      color: #222;
-      overflow-x: hidden;
+    body { font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    a { text-decoration: none; }
+
+    /* Header shadow / shrink */
+    #header{ backdrop-filter: blur(6px); transition: padding .25s, box-shadow .25s; }
+    #header.shrink{ padding: .25rem 1.5rem; box-shadow: 0 6px 30px rgba(16,24,40,.08); }
+
+    /* hero specifics */
+    .hero-bg { background-image: url('https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/1.jpg'); background-size: cover; background-position: center; min-height: 88vh; position: relative; }
+
+    /* service panel (full screen) */
+    .service-panel {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 80;
+      background: linear-gradient(180deg, rgba(6,10,15,0.96), rgba(6,10,15,0.96));
+      color: white;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
-
-    img {
-      width: 100%;
-      display: block;
-    }
-
-
-    /* -----------------------------------------------
-       HEADER Y NAVEGACIÓN
-    ----------------------------------------------- */
-    header {
-      width: 100%;
-      height: 100vh;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-    }
-
-    nav {
-      width: 100%;
-      padding: 25px 60px;
-      position: absolute;
-      top: 0;
-      left: 0;
+    .service-panel .container {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      justify-content: center;
+      padding: 3rem;
     }
-
-    #logo img {
-      height: 60px;
-      width: auto;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 30px;
-    }
-
-    nav li {
-      color: #fff;
-      font-size: 18px;
+    .service-panel .close-btn {
+      position: fixed;
+      right: 1.25rem;
+      top: 1.25rem;
+      z-index: 90;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: .5rem .7rem;
+      border-radius: .5rem;
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    nav li:hover {
-      opacity: 0.7;
-    }
-
-
-    /* -----------------------------------------------
-       HERO
-    ----------------------------------------------- */
-    #hero-text {
-      position: absolute;
-      bottom: 25%;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: white;
-      z-index: 5;
-    }
-
-    #hero-text h1 {
-      font-size: 80px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    #hero-text p {
-      font-size: 20px;
-      margin-top: 10px;
-      opacity: 0.9;
-    }
-
-    #scroll {
-      width: 30px;
-      height: 50px;
-      border: 2px solid white;
-      border-radius: 25px;
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-
-    /* -----------------------------------------------
-       SECCIONES INFO
-    ----------------------------------------------- */
-    section.info {
-      width: 100%;
-      padding: 80px 20px;
-      background: #fff;
-      text-align: center;
-    }
-
-    section.info p:first-child {
-      font-size: 40px;
-      font-weight: bold;
-      color: #3a3a3a;
-    }
-
-    section.info p:nth-child(2) {
-      max-width: 700px;
-      margin: 20px auto;
-      font-size: 18px;
-      color: #666;
-      line-height: 1.5;
-    }
-
-    .button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 28px;
-      background: black;
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .button:hover {
-      background: #333;
-    }
-
-
-    /* -----------------------------------------------
-       GALLERY
-    ----------------------------------------------- */
-    section.gallery {
-      width: 100%;
-      background: #f7f7f7;
-      padding-bottom: 80px;
-    }
-
-    #hero-image {
-      width: 100%;
-      height: 500px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    .text-cont {
-      position: absolute;
-      bottom: 0;
-      background: rgba(0,0,0,0.4);
-      width: 100%;
-      padding: 25px;
-      text-align: left;
-      display: flex;
-      justify-content: space-between;
+      display: inline-flex;
       align-items: center;
-      color: white;
+      gap: .5rem;
     }
 
-    .promo-text p {
-      font-size: 28px;
-      font-weight: bold;
+    /* subtle divider used globally */
+    .section-divider { height: 2px; width: 56px; background: var(--accent); margin: .75rem auto 1.25rem; border-radius: 6px; }
+
+    /* Service card hover */
+    .service-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(16,24,40,.08); }
+
+    /* small screens */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.25rem; }
+      .hero-sub { font-size: 1rem; }
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-      padding: 40px;
-    }
+    /* accessibility focus */
+    .focus-ring:focus { outline: 3px solid rgba(59,130,246,.28); outline-offset: 3px; }
 
-    .photo-item {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .photo-item img {
-      height: 300px;
-      object-fit: cover;
-    }
-
-    .photo-item .text-cont {
-      height: 100px;
-    }
-
-
-    /* -----------------------------------------------
-       PARALLAX
-    ----------------------------------------------- */
-    section.transparent-text {
-      height: 600px;
-      position: relative;
-      overflow: hidden;
-      background: #000;
-    }
-
-    #center img {
-      width: 100%;
-      opacity: 0.2;
-      transform: translateY(0px);
-      transition: transform 0.1s linear;
-    }
-
-    .parallaxin {
-      transition: transform 0.1s linear;
-    }
-
-
-    /* -----------------------------------------------
-       FOOTER
-    ----------------------------------------------- */
-    footer {
-      padding: 30px;
-      text-align: center;
-      background: #111;
-      color: #ccc;
-      font-size: 14px;
-    }
-
-
-    /* -----------------------------------------------
-       RESPONSIVE
-    ----------------------------------------------- */
-    @media(max-width: 900px) {
-      nav ul {
-        display: none;
-      }
-
-      #hero-text h1 {
-        font-size: 55px;
-      }
-
-      .row {
-        grid-template-columns: 1fr;
-      }
-    }
+    /* map height */
+    #map iframe { min-height: 360px; }
   </style>
 </head>
-<body>
+<body class="bg-white text-gray-800">
 
-  <!-- ---------------------------------------------
-       HEADER / NAV / HERO
-  ---------------------------------------------- -->
-  <header>
-    <nav>
-      <div id="logo">
-        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/logo.png">
+  <!-- TOP BAR -->
+  <div class="w-full bg-green-800 text-white text-sm py-2">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <span class="font-semibold">📞 (801) 888-5152</span>
+        <span class="opacity-60">|</span>
+        <a href="mailto:AllSeasonsJose31@gmail.com" class="hover:text-gray-200">AllSeasonsJose31@gmail.com</a>
       </div>
-      <ul id="menu">
-        <li>Grass</li>
-        <li>Services</li>
-        <li>Snow</li>
-        <li>Removal</li>
-        <li>Contact</li>
-      </ul>
-    </nav>
 
-    <div id="hero-text">
-      <h1>ALL SEASONS</h1>
-      <p>Grass Maintenance & Snow Removal</p>
+      <div class="space-x-4 flex text-sm">
+        <a href="#" class="hover:text-gray-300">Instagram</a>
+        <a href="#" class="hover:text-gray-300">Facebook</a>
+        <a href="#" class="hover:text-gray-300">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="header" class="fixed w-full z-50 bg-white/70 py-4">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/logo.png" alt="All Seasons logo" class="h-12 w-auto">
+        <h1 class="font-extrabold text-lg text-green-700 hidden sm:block">All Seasons Grass</h1>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+        <a class="hover:text-green-600 cursor-pointer" href="#home">Home</a>
+        <a class="hover:text-green-600 cursor-pointer" href="#about">About</a>
+        <a id="services-nav" class="hover:text-green-600 cursor-pointer" href="#services">Services</a>
+        <div class="relative group">
+          <button id="services-submenu-btn" class="hover:text-green-600 flex items-center gap-1">More <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg></button>
+          <!-- sub menu -->
+          <div id="services-submenu" class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 hidden">
+            <a class="block px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer" data-target="commercial">Commercial</a>
+            <a class="block px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer" data-target="residential">Residential</a>
+            <a class="block px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer" data-target="additional">Additional</a>
+          </div>
+        </div>
+
+        <a class="hover:text-green-600 cursor-pointer" href="#payments">Payments</a>
+        <a class="hover:text-green-600 cursor-pointer" href="#contact">Contact</a>
+        <a class="hover:text-green-600 cursor-pointer" href="#map">Service Area</a>
+      </nav>
+
+      <!-- mobile -->
+      <div class="md:hidden flex items-center gap-3">
+        <button id="mobile-menu-btn" class="p-2 rounded-md bg-white border focus:ring focus:ring-blue-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"d="M4 8h16M4 16h16"/></svg>
+        </button>
+      </div>
     </div>
 
-    <div id="scroll"></div>
+    <!-- mobile menu panel -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-3">
+        <a href="#home" class="py-2">Home</a>
+        <a href="#about" class="py-2">About</a>
+        <a href="#services" class="py-2">Services</a>
+        <a href="#payments" class="py-2">Payments</a>
+        <a href="#contact" class="py-2">Contact</a>
+        <a href="#map" class="py-2">Service Area</a>
+      </div>
+    </div>
   </header>
 
-  <!-- ---------------------------------------------
-       PRIMERA INFO
-  ---------------------------------------------- -->
-  <section class="info">
-    <p>Year-Round Outdoor Services</p>
-    <p>Professional Grass Maintenance and Reliable Snow Removal for Homes & Businesses.</p>
-    <div class="button">Learn More</div>
-  </section>
+  <!-- HERO -->
+  <main id="home" class="hero-bg flex items-center justify-center text-center text-white">
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="relative z-10 max-w-4xl px-6 py-24">
+      <h2 id="heroTitle" class="hero-title text-5xl md:text-6xl font-extrabold leading-tight drop-shadow-sm">ALL SEASONS GRASS MAINTENANCE</h2>
+      <p id="heroSubtitle" class="hero-sub mt-4 text-lg md:text-xl opacity-90">A Full Service Experience — Year Round Work Grass Or Snow</p>
 
-  <!-- ---------------------------------------------
-       GALERÍA PRINCIPAL
-  ---------------------------------------------- -->
-  <section class="gallery">
-
-    <div id="hero-image" style="background-image: url('https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/1.jpg');">
-      <div class="text-cont">
-        <div class="promo-text">
-          <p>Residential & Commercial</p>
-        </div>
-        <div class="button">View Services</div>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold shadow">Request Estimate</a>
+        <a href="tel:8018885152" class="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white bg-white/10 hover:bg-white text-white font-semibold">Text Anytime (801) 888-5152</a>
       </div>
     </div>
+  </main>
 
-    <div class="row">
-
-      <div class="photo-item">
-        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/2.jpg">
-        <div class="text-cont">
-          <div class="promo-text"><p>Lawn Care</p></div>
-          <div class="button">Details</div>
-        </div>
+  <!-- ABOUT -->
+  <section id="about" class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+      <div class="rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/11.jpg" alt="team" class="w-full h-full object-cover">
       </div>
 
-      <div class="photo-item">
-        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/3.jpg">
-        <div class="text-cont">
-          <div class="promo-text"><p>Snow Removal</p></div>
-          <div class="button">Details</div>
+      <div>
+        <h3 class="text-3xl font-bold text-green-700 mb-2 section-title">About Us</h3>
+        <div class="section-divider"></div>
+        <p class="mb-4 text-gray-700">When it comes to mowing, clean ups, trimming, aeration, weedwacking and snow removal — no project is too big or small. We work year-round to keep your property looking perfect, no matter the weather.</p>
+
+        <div class="grid grid-cols-1 gap-3 text-gray-800">
+          <div class="p-4 rounded-xl bg-white shadow-sm">
+            <strong>CEO / PRESIDENT: </strong> Jose Cabadas — Over 10 years of hands-on outdoor work.
+          </div>
+          <div class="p-4 rounded-xl bg-white shadow-sm">
+            <strong>CFO / VICE PRESIDENT: </strong> Marisa Cabadas — Handles invoicing, customer service & meetings.
+          </div>
         </div>
       </div>
-
-      <div class="photo-item">
-        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/4.jpg">
-        <div class="text-cont">
-          <div class="promo-text"><p>Landscaping</p></div>
-          <div class="button">Details</div>
-        </div>
-      </div>
-
     </div>
   </section>
 
-  <!-- ---------------------------------------------
-       SEGUNDA INFO
-  ---------------------------------------------- -->
-  <section class="info">
-    <p>Reliable Service, Every Season</p>
-    <p>From spring cleanup to winter plowing — we’ve got you covered all year long.</p>
-    <div class="button">Get a Quote</div>
-  </section>
+  <!-- SERVICES -->
+  <section id="services" class="py-20">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h3 class="text-3xl font-bold text-green-700 mb-2 section-title">Our Services</h3>
+      <div class="section-divider"></div>
+      <p class="max-w-2xl mx-auto text-gray-600 mb-8">Full-service lawn & snow services for homeowners, businesses and HOA communities. Click a service to learn more.</p>
 
-  <!-- ---------------------------------------------
-       PARALLAX
-  ---------------------------------------------- -->
-  <section class="transparent-text">
-    <div id="center">
-      <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/12.jpg">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- commercial -->
+        <article class="service-card p-6 bg-white rounded-2xl shadow-lg cursor-pointer" data-service="commercial" role="button" tabindex="0" aria-pressed="false">
+          <h4 class="text-xl font-bold mb-3">Commercial Services</h4>
+          <ul class="text-left space-y-2 text-sm text-gray-600">
+            <li>Commercial Lawn Mowing / Care</li>
+            <li>Commercial Bush Trimming</li>
+            <li>Commercial Leaf Clean Ups</li>
+            <li>Plowing Parking Lots</li>
+            <li>Salting Parking Lots & Streets</li>
+            <li class="font-semibold text-green-700">✔ HOA Property Maintenance</li>
+          </ul>
+          <div class="mt-6 flex justify-end">
+            <button class="px-4 py-2 bg-green-600 text-white rounded-full open-service-btn focus-ring" data-target="commercial">Learn More</button>
+          </div>
+        </article>
+
+        <!-- residential -->
+        <article class="service-card p-6 bg-white rounded-2xl shadow-lg cursor-pointer" data-service="residential" role="button" tabindex="0" aria-pressed="false">
+          <h4 class="text-xl font-bold mb-3">Residential Services</h4>
+          <ul class="text-left space-y-2 text-sm text-gray-600">
+            <li>Residential Mowing</li>
+            <li>Residential Bush Trimming</li>
+            <li>Residential Leaf Removal</li>
+            <li>Snow Clearing</li>
+            <li>Sidewalk Ice Melt</li>
+            <li class="font-semibold text-green-700">✔ HOA Subdivision Maintenance</li>
+          </ul>
+          <div class="mt-6 flex justify-end">
+            <button class="px-4 py-2 bg-green-600 text-white rounded-full open-service-btn focus-ring" data-target="residential">Learn More</button>
+          </div>
+        </article>
+
+        <!-- additional -->
+        <article class="service-card p-6 bg-white rounded-2xl shadow-lg cursor-pointer" data-service="additional" role="button" tabindex="0" aria-pressed="false">
+          <h4 class="text-xl font-bold mb-3">Additional Services</h4>
+          <ul class="text-left space-y-2 text-sm text-gray-600">
+            <li>Aeration</li>
+            <li>Irrigation Start Ups</li>
+            <li>Winterizing Sprinklers</li>
+            <li>Sprinkler Blow Outs</li>
+            <li>Leaf & Bush Clean Ups</li>
+          </ul>
+          <div class="mt-6 flex justify-end">
+            <button class="px-4 py-2 bg-green-600 text-white rounded-full open-service-btn focus-ring" data-target="additional">Learn More</button>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
-  <!-- ---------------------------------------------
-       FOOTER
-  ---------------------------------------------- -->
-  <footer>
-    © 2025 All Seasons — Grass Maintenance & Snow Removal. All Rights Reserved.
+  <!-- PAYMENTS -->
+  <section id="payments" class="py-16 bg-gradient-to-r from-green-700 to-blue-700 text-white">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h3 class="text-3xl font-bold mb-6">Payment Methods</h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-xl bg-white/10 backdrop-blur">
+          <h4 class="font-bold">Crypto Accepted</h4>
+          <p class="mt-2 opacity-90">XRP, XDC, XLM, Bitcoin, Ethereum, HBAR</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white/10 backdrop-blur">
+          <h4 class="font-bold">Venmo</h4>
+          <p class="mt-2 opacity-90">Last 4 digits: 5152</p>
+        </div>
+        <div class="p-6 rounded-xl bg-white/10 backdrop-blur">
+          <h4 class="font-bold">Cash / Checks</h4>
+          <p class="mt-2 opacity-90">Make checks to <strong>Jose Cabadas</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h3 class="text-3xl font-bold text-green-700 mb-2">Contact Us</h3>
+      <div class="section-divider"></div>
+      <p class="mb-4 text-lg">TEXT ANYTIME or Call 8–7PM — <strong>(801) 888-5152</strong></p>
+      <p class="mb-4">Email: <a href="mailto:AllSeasonsJose31@gmail.com" class="text-green-700 font-semibold">AllSeasonsJose31@gmail.com</a></p>
+
+      <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="tel:8018885152" class="px-6 py-3 rounded-full bg-green-600 text-white font-semibold">📞 Call Now</a>
+        <a href="#payments" class="px-6 py-3 rounded-full border border-green-600 text-green-700 font-semibold">Payment Methods</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section id="map" class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <h4 class="text-xl font-bold mb-3">Service Area</h4>
+      <div class="section-divider"></div>
+      <div class="w-full rounded-xl overflow-hidden shadow-lg">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d96953.59887143637!2d-112.1650634!3d41.1616109!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m3!3m2!1d41.297!2d-112.028!4m3!3m2!1d41.033!2d-111.938!4m3!3m2!1d41.153!2d-112.120!5e0!3m2!1sen!2sus!4v1700000000000"
+          class="w-full h-96 border-0" allowfullscreen="" loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-8 bg-green-800 text-white text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <p>© 2025 All Seasons Grass Maintenance & Snow Removal</p>
+      <div class="mt-4 space-x-4">
+        <a href="#" class="hover:text-gray-300">Instagram</a>
+        <a href="#" class="hover:text-gray-300">Facebook</a>
+        <a href="#" class="hover:text-gray-300">TikTok</a>
+      </div>
+    </div>
   </footer>
 
+  <!-- SERVICE PANELS (full screen detailed views) -->
+  <!-- Commercial -->
+  <div id="panel-commercial" class="service-panel" aria-hidden="true">
+    <button class="close-btn text-sm text-white" data-close="commercial" aria-label="Close panel">
+      ✕ Close
+    </button>
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-left">
+        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/10.jpg" alt="" class="rounded-xl mb-6 w-full object-cover">
+        <h2 class="text-4xl font-extrabold mb-2">Commercial Services</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-200 mb-4">Full-service commercial property maintenance: scheduled mowing programs, landscape upkeep, pruning and seasonal cleanups. We also provide reliable parking lot plowing and salting to keep your business open and safe during winter months.</p>
 
-  <!-- ---------------------------------------------
-       JAVASCRIPT PARALLAX
-  ---------------------------------------------- -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">What we provide</h4>
+            <ul class="text-gray-200 space-y-2">
+              <li>Routine mowing & trimming packages</li>
+              <li>Bush & hedge management</li>
+              <li>Leaf & debris removal</li>
+              <li>Parking lot plowing & salt management</li>
+            </ul>
+          </div>
+
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">Why choose us</h4>
+            <p class="text-gray-200">We work with property managers and HOAs to create consistent, reliable schedules and transparent pricing. Fully insured and experienced crews.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex gap-4">
+          <a href="#contact" class="px-6 py-3 rounded-full bg-green-600 text-white font-semibold">Request Commercial Quote</a>
+          <button class="px-6 py-3 rounded-full border border-white text-white" data-close="commercial">Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Residential -->
+  <div id="panel-residential" class="service-panel" aria-hidden="true">
+    <button class="close-btn text-sm text-white" data-close="residential" aria-label="Close panel">✕ Close</button>
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-left">
+        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/13.jpg" alt="" class="rounded-xl mb-6 w-full object-cover">
+        <h2 class="text-4xl font-extrabold mb-2">Residential Services</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-200 mb-4">We take care of your home's curb appeal: mowing, edging, trimming, seasonal leaf removal and dependable snow clearing. Tailored schedules and friendly crews you can trust.</p>
+
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">Popular packages</h4>
+            <ul class="text-gray-200 space-y-2">
+              <li>Weekly or bi-weekly mowing</li>
+              <li>Seasonal cleanups</li>
+              <li>Spring & fall aeration</li>
+            </ul>
+          </div>
+
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">Winter services</h4>
+            <p class="text-gray-200">Sidewalk clearing, driveway plowing and ice melt treatments — we respond quickly to keep families safe.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex gap-4">
+          <a href="#contact" class="px-6 py-3 rounded-full bg-green-600 text-white font-semibold">Get Residential Quote</a>
+          <button class="px-6 py-3 rounded-full border border-white text-white" data-close="residential">Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional -->
+  <div id="panel-additional" class="service-panel" aria-hidden="true">
+    <button class="close-btn text-sm text-white" data-close="additional" aria-label="Close panel">✕ Close</button>
+    <div class="container">
+      <div class="max-w-4xl mx-auto text-left">
+        <img src="https://raw.githubusercontent.com/sergiogonza/All-Seasons/main/assets/14.jpg" alt="" class="rounded-xl mb-6 w-full object-cover">
+        <h2 class="text-4xl font-extrabold mb-2">Additional Services</h2>
+        <div class="section-divider"></div>
+        <p class="text-gray-200 mb-4">Specialized offerings like irrigation start-ups, sprinkler winterization, aeration and seasonal projects. We can schedule one-off tasks or ongoing maintenance depending on your needs.</p>
+
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">Irrigation</h4>
+            <p class="text-gray-200">Start-ups, winterization and leak repairs.</p>
+          </div>
+
+          <div class="bg-white/5 p-6 rounded-xl">
+            <h4 class="font-bold text-lg mb-2">Aeration & more</h4>
+            <p class="text-gray-200">Core aeration, overseeding and soil health services.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex gap-4">
+          <a href="#contact" class="px-6 py-3 rounded-full bg-green-600 text-white font-semibold">Request Service</a>
+          <button class="px-6 py-3 rounded-full border border-white text-white" data-close="additional">Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS: interactivity + GSAP animations -->
   <script>
-    $(window).scroll(function() {
-      var $centerImg = $('#center > img'),
-          hT = $centerImg.offset().top,
-          hH = $centerImg.outerHeight(),
-          wH = $(window).height(),
-          dH = $(document).height(),
-          wS = $(this).scrollTop();
-    
-      if (wS > (hT + hH - wH)) {
-        $centerImg.addClass("parallaxin");
-      } else {
-        $centerImg.removeClass("parallaxin");
-        $centerImg.css({'transform': 'translate(0,0)'});
-      }
-      
-      $('#hero-text').css({
-        'transform': 'translate(0,' + -wS * 0.5 + 'px)'
+    // Register GSAP plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Header shrink on scroll (tailored)
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) header.classList.add('shrink'); else header.classList.remove('shrink');
+    });
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn) {
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
       });
-      
-      $('.parallaxin').css({
-        'transform': 'translate(0, -' + (wS + 1000 - dH)/4 + '%)'
+    }
+
+    // Services submenu toggle (desktop)
+    const submenuBtn = document.getElementById('services-submenu-btn');
+    const submenu = document.getElementById('services-submenu');
+    if (submenuBtn) {
+      submenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        submenu.classList.toggle('hidden');
+      });
+      document.addEventListener('click', () => submenu.classList.add('hidden'));
+      // clicks inside the submenu open panels
+      submenu.querySelectorAll('a[data-target]').forEach(a => {
+        a.addEventListener('click', (ev) => {
+          const target = ev.currentTarget.getAttribute('data-target');
+          openPanel(target);
+          submenu.classList.add('hidden');
+        });
+      });
+    }
+
+    // Smooth anchor scrolling for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href').slice(1);
+        if (!targetId) return;
+        const el = document.getElementById(targetId);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // OPEN / CLOSE panels: GSAP driven animations
+    const panels = {
+      commercial: document.getElementById('panel-commercial'),
+      residential: document.getElementById('panel-residential'),
+      additional: document.getElementById('panel-additional')
+    };
+
+    function openPanel(key) {
+      if (!panels[key]) return;
+      const p = panels[key];
+      // show and animate
+      p.style.display = 'block';
+      p.setAttribute('aria-hidden','false');
+
+      // initial state
+      gsap.fromTo(p, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y:0, duration: 0.45, ease: 'power3.out' });
+
+      // inner content animation
+      gsap.fromTo(p.querySelector('.container'), { y: 30, autoAlpha: 0 }, { y:0, autoAlpha: 1, duration: 0.6, delay: 0.05, ease: 'power3.out' });
+
+      // prevent body scroll while open
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePanel(key) {
+      if (!panels[key]) return;
+      const p = panels[key];
+
+      gsap.to(p, { autoAlpha: 0, y: 60, duration: 0.35, ease: 'power2.in', onComplete: () => {
+        p.style.display = 'none';
+        p.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }});
+    }
+
+    // attach openers (buttons) on the cards
+    document.querySelectorAll('.open-service-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = btn.getAttribute('data-target');
+        openPanel(target);
+      });
+    });
+
+    // also allow clicking the whole article to open
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // if click was on button, button handler already runs; otherwise open by dataset
+        const service = card.getAttribute('data-service');
+        // avoid double opening if clicking inside panel buttons
+        if (e.target.closest('.open-service-btn')) return;
+        openPanel(service);
+      });
+      // keyboard accessibility
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openPanel(card.getAttribute('data-service'));
+        }
+      });
+    });
+
+    // close buttons inside panels
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-close');
+        closePanel(key);
+      });
+    });
+
+    // close panels when pressing ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        Object.keys(panels).forEach(k => {
+          if (panels[k] && panels[k].style.display === 'block') closePanel(k);
+        });
+      }
+    });
+
+    // GSAP: Reveal animations on scroll for sections and cards
+    gsap.utils.toArray('.section-title, .service-card, .photo-item, .promo-text, .section-divider').forEach((el) => {
+      gsap.from(el, {
+        y: 30,
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // Hero subtle entrance
+    gsap.from('#heroTitle', { y: 30, autoAlpha: 0, duration: 0.8, delay: 0.1 });
+    gsap.from('#heroSubtitle', { y: 20, autoAlpha: 0, duration: 0.8, delay: 0.25 });
+
+    // Service cards stagger animation
+    gsap.from('.service-card', {
+      y: 20,
+      autoAlpha: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.12,
+      scrollTrigger: {
+        trigger: '#services',
+        start: 'top 80%'
+      }
+    });
+
+    // Parallax on hero background (subtle)
+    gsap.to('.hero-bg', {
+      backgroundPosition: '50% 20%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero-bg',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    // clickable submenu items inside the Services sub-menu handled above
+
+    // Clean up: hide submenu on escape or click outside
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') submenu?.classList?.add('hidden');
+    });
+
+    // ensure panels close on window resize (optional safety)
+    window.addEventListener('resize', () => {
+      Object.keys(panels).forEach(k => {
+        if (panels[k] && panels[k].style.display === 'block') {
+          // keep open, but ensure scroll is locked correctly
+          document.body.style.overflow = 'hidden';
+        }
       });
     });
   </script>
-
 </body>
 </html>
